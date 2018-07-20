@@ -4,16 +4,16 @@ class AnswerGenerator {
         this.max = max;
         this.length = length;
     }
-    generate() {
-        const answer = [];
-        while (answer.length < this.length) {
-            const number = ~~(Math.random() * (this.max - this.min + 1)) + this.min;
-            if (!answer.includes(number)) {
-                answer.push(number);
+
+    generateRandomNumber() {
+        const sequence = [];
+        while (sequence.length < this.length) {
+            const randomNumber = ~~(Math.random() * (this.max - this.min + 1)) + this.min;
+            if (!sequence.includes(randomNumber)) {
+                sequence.push(randomNumber);
             }
         }
-        return answer;
+        return sequence;
     }
 }
-
 module.exports = AnswerGenerator;

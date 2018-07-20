@@ -1,47 +1,57 @@
-class GuessNumberGame {
+class GuessNumber {
     constructor(answerGenerator) {
-        this.answer = answerGenerator.generate();
-        this.chances = 6;
-        this.errorMessageFor6Chances = "Run out of 6 chances";
-        this.errorMessageForInvalidInput = "Wrong Input，Input again";
+        this.answer = answerGenerator.generateRandomNumber();
+        this.timess = 0;
     }
 
     test(input) {
-        if (this.chances <= 0) {
-            return this.errorMessageFor6Chances;
+        this.timess++;
+        if (this.timess > 6) {
+            return 'game over';
+        }
+        var a = 0, b = 0, sequence = [];
+        var realNumber = this.answer;
+        var userInput = this.formatInput(input.split(" ").map(ele => +ele));
+        if (userInput == false) {
+            return 'Wrong Input，Input again';
         }
 
-        const patternOfZeroToNine = new RegExp("^[0-9]$");
-        const inputNumberes = [];
-        let invalid = false;
-        input.split(" ").forEach(
-            element => {
-                if (!patternOfZeroToNine.test(element)) {
-                    invalid = true;
-                } else {
-                    const number = parseInt(element, 10);
-                    if (!inputNumberes.includes(number)) {
-                        inputNumberes.push(number);
-                    }
+        for (var item of userInput) {
+            if (realNumber.indexOf(item) >= 0) b++;
+        }
+        for (var ite = 0; ite < 4; ite++) {
+            if (userInput[ite] == realNumber[ite]) a++;
+        }
+        const result = `${a}A${(b - a)}B`;
+        return result;
+
+    }
+
+    formatInput(collection) {
+        var flag = true;
+        var s = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        if (collection.length != 4) flag = false;
+        for (var item of collection) {
+            if (s.indexOf(item) == -1) {
+                flag = false;
+            }
+        }
+        var ck = [];
+
+        for (var i = 0; i < collection.length; i++) {
+            for (var j = i + 1; j < collection.length; j++) {
+                if (collection[i] == collection[j]) {
+                    flag = false;
                 }
             }
-        );
-
-        if (invalid || inputNumberes.length < 4) {
-            return this.errorMessageForInvalidInput;
         }
-        let numberInCorrectPosition = 0;
-        let numberInWrongPosition = 0;
-        inputNumberes.forEach(number => {
-            if (inputNumberes.indexOf(number) === this.answer.indexOf(number)) {
-                numberInCorrectPosition += 1;
-            } else if (this.answer.includes(number)) {
-                numberInWrongPosition += 1;
-            }
-        });
-        this.chances -= 1;
-        return `${numberInCorrectPosition}A${numberInWrongPosition}B`;
+        if (flag) {
+            return collection;
+        }
+        return false
+
     }
+
 }
 
-module.exports = GuessNumberGame;
+module.exports = GuessNumber;
